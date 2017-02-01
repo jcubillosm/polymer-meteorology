@@ -1,0 +1,99 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
+
+<dom-module id="meteorology-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <iron-ajax id="ajax" auto
+               url="http://api.openweathermap.org/data/2.5/forecast/city"
+               params='{"id": "3117732", "APPID": "0f9dc1c29165b161dfbef48c75a2f010"}'
+               handleAs="json"
+               on-response="_weatherResponse">
+    </iron-ajax>
+    <template is="dom-if" if=[[data]]>
+      <template>
+        <paper-card heading="Emmental" image="http://placehold.it/350x150/FFC107/000000" alt="Emmental">
+  <div class="card-content">
+    Emmentaler or Emmental is a yellow, medium-hard cheese that originated in the area around Emmental, Switzerland. It is one of the cheeses of Switzerland, and is sometimes known as Swiss cheese.
+  </div>
+  <div class="card-actions">
+    <paper-button>Share</paper-button>
+    <paper-button>Explore!</paper-button>
+  </div>
+</paper-card>
+      </template>
+    </template>
+  </template>
+  <script>
+    Polymer({
+
+      is: 'meteorology-app',
+
+      properties: {
+        data: {
+          type: Object,
+          value: {}
+        },
+        icon: {
+          type: Object,
+          value: {
+            "01d": "wi-day-sunny",
+            "01n": "wi-night-clear",
+            "02d": "wi-day-cloudy",
+            "02n": "wi-night-cloudy",
+            "03d": "wi-cloudy",
+            "03n": "wi-cloudy",
+            "04d": "wi-cloudy",
+            "04n": "wi-cloudy",
+            "09d": "wi-showers",
+            "09n": "wi-showers",
+            "10d": "wi-day-rain",
+            "10n": "wi-night-rain",
+            "11d": "wi-thunderstorm",
+            "11n": "wi-thunderstorm",
+            "13d": "wi-snow",
+            "13n": "wi-snow",
+            "50d": "wi-fog",
+            "50n": "wi-fog"
+          } 
+        }
+      },
+      _weatherResponse: function (e) {
+        var values = e.detail.response;
+        console.log(e);
+        this._initializeData(values);
+        this._sectedIcon(values);
+      },
+      _initializeData: function (param) {
+        console.log('param ',param);
+        // this.data = {
+        //   icon: this.iconMapping[res.weather[0].icon],
+        //   conditiontext: res.weather[0].description,
+        //   name: res.name,
+        //   sunrise: dateHelper(sunrise.getHours()) + ":" + dateHelper(sunrise.getMinutes()),
+        //   sunset: dateHelper(sunset.getHours()) + ":" + dateHelper(sunset.getMinutes()),
+        //   currentTemp: Math.round(res.main.temp),
+        //   minTemp: Math.round(res.main.temp_min),
+        //   maxTemp: Math.round(res.main.temp_max),
+        //   windSpeed: res.wind.speed,
+        //   windDirection: this.windDirections[Math.round(res.wind.deg / 45) % 8],
+        //   cloudiness: res.clouds.all,
+        //   humidity: res.main.humidity,
+        //   pressure: res.main.pressure,
+        //   tempLevel: getTempLevel(res.main.temp, this.imperial)
+        // };
+      },
+      _sectedIcon: function (param) {
+        this.icon[param.list[0].weather[0].icon];
+      }
+
+    });
+  </script>
+</dom-module>

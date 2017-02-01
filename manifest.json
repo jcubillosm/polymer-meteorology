@@ -1,0 +1,7 @@
+{
+  "name": "polymer-meteorology",
+  "short_name": "polymer-meteorology",
+  "description": "Displays weather in Madrid",
+  "start_url": "/",
+  "display": "standalone"
+}
