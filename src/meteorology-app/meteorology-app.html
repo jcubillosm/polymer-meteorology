@@ -3,12 +3,23 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../components/meteorology-card.html">
 
 <dom-module id="meteorology-app">
   <template>
     <style>
       :host {
         display: block;
+      }
+      paper-card {
+        height: 50vh;
+        width: 45vw;
+      }
+      paper-header-panel {
+        height: 10vh;
+        text-align:center;
       }
     </style>
     <iron-ajax id="ajax" auto
@@ -17,17 +28,15 @@
                handleAs="json"
                on-response="_weatherResponse">
     </iron-ajax>
+    <paper-header-panel class="flex">
+      <paper-toolbar>
+        <div>Meteorology!</div>
+      </paper-toolbar>
+    </paper-header-panel>
+
     <template is="dom-if" if=[[data]]>
-      <template>
-        <paper-card heading="Emmental" image="http://placehold.it/350x150/FFC107/000000" alt="Emmental">
-  <div class="card-content">
-    Emmentaler or Emmental is a yellow, medium-hard cheese that originated in the area around Emmental, Switzerland. It is one of the cheeses of Switzerland, and is sometimes known as Swiss cheese.
-  </div>
-  <div class="card-actions">
-    <paper-button>Share</paper-button>
-    <paper-button>Explore!</paper-button>
-  </div>
-</paper-card>
+      <template is="dom-repeat" items=[[objAsArray]]>
+        <meteorology-card weather=[[items]]></meteorology-card>
       </template>
     </template>
   </template>
@@ -37,6 +46,10 @@
       is: 'meteorology-app',
 
       properties: {
+        objAsArray: {
+          type: Array,
+          value: []
+        },
         data: {
           type: Object,
           value: {}
@@ -65,34 +78,41 @@
           } 
         }
       },
+      
       _weatherResponse: function (e) {
         var values = e.detail.response;
-        console.log(e);
-        this._initializeData(values);
-        this._sectedIcon(values);
+        var that = this;
+        values.list.forEach (function (element, index, array) {
+          that.data [index] = {
+            iconData: that.icon[element.weather[0].icon],
+            description: element.weather[0].description
+            // name: res.name,
+            // sunrise: dateHelper(sunrise.getHours()) + ":" + dateHelper(sunrise.getMinutes()),
+            // sunset: dateHelper(sunset.getHours()) + ":" + dateHelper(sunset.getMinutes()),
+            // currentTemp: Math.round(res.main.temp),
+            // minTemp: Math.round(res.main.temp_min),
+            // maxTemp: Math.round(res.main.temp_max),
+            // windSpeed: res.wind.speed,
+            // windDirection: this.windDirections[Math.round(res.wind.deg / 45) % 8],
+            // cloudiness: res.clouds.all,
+            // humidity: res.main.humidity,
+            // pressure: res.main.pressure,
+            // tempLevel: getTempLevel(res.main.temp, this.imperial)
+          };
+        });
+        this._toArray();
       },
-      _initializeData: function (param) {
-        console.log('param ',param);
-        // this.data = {
-        //   icon: this.iconMapping[res.weather[0].icon],
-        //   conditiontext: res.weather[0].description,
-        //   name: res.name,
-        //   sunrise: dateHelper(sunrise.getHours()) + ":" + dateHelper(sunrise.getMinutes()),
-        //   sunset: dateHelper(sunset.getHours()) + ":" + dateHelper(sunset.getMinutes()),
-        //   currentTemp: Math.round(res.main.temp),
-        //   minTemp: Math.round(res.main.temp_min),
-        //   maxTemp: Math.round(res.main.temp_max),
-        //   windSpeed: res.wind.speed,
-        //   windDirection: this.windDirections[Math.round(res.wind.deg / 45) % 8],
-        //   cloudiness: res.clouds.all,
-        //   humidity: res.main.humidity,
-        //   pressure: res.main.pressure,
-        //   tempLevel: getTempLevel(res.main.temp, this.imperial)
-        // };
-      },
-      _sectedIcon: function (param) {
-        this.icon[param.list[0].weather[0].icon];
-      }
+       _toArray: function () {
+            var propArray = [];
+            for (var prop in this.data) {
+                if (this.data.hasOwnProperty(prop)) {
+                    propArray.push({name: prop, value: this.data[prop]});
+                }
+            }
+
+            this.objAsArray = propArray;
+            console.log(this.objAsArray[0].value.description);
+        }
 
     });
   </script>

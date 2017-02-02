@@ -1,0 +1,102 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+
+<!--
+element.
+
+Examples:
+
+@demo demo/index.html
+-->
+
+<dom-module id="meteorology-card">
+  <style>
+    :host  {
+    font-family: arial; }
+
+  :host([title]) paper-card {
+    border: 2px dashed; 
+  }
+
+  paper-card {
+    cursor: pointer;
+    display: inline-block;
+    font-family: arial;
+    height: 250px;
+    margin: 10px;
+    overflow: hidden;
+    text-align: center;
+    width: 250px; }
+  </style>
+
+  <template >
+
+    <paper-card on-tap="_selectedHouse">
+      <h2>{{member.name}}</h2>
+
+      <div class="card-content" >
+        <p>{{weather}}</p>
+        <p>{{weather}}</p>
+        <h3> {{_title}} </h3>
+      </div>
+
+    </paper-card>
+
+
+  </template>
+
+
+  <script>
+    Polymer({
+      is: 'meteorology-card',
+      properties: {
+        /**
+        * The House information.
+        */
+        weather: {
+          type: Object,
+          value: {
+            name: 'Unknown'
+          }
+        }, 
+        /**
+        * There is lord
+        */
+        _lord: {
+          type: Boolean
+        },
+        /**
+        * First title of each House
+        */
+        _title: {
+          type: String,
+          computed: '_computeTitle(member)',
+          observer:['_cardMarked']
+        }
+      },
+      /**
+      * Checks if house has title
+      */
+      // _cardMarked: function() {
+      //   if(this._title) {
+      //     this.toggleAttribute("title", true);
+      //   }
+      // },
+      // /**
+      // * Show the first title of each House
+      // */
+      // _computeTitle: function(member) {
+      //   return member.titles[0] || null;
+      // },
+      // /**
+      // * A private function
+      // */
+      // _selectedHouse: function() {
+      //   this.fire("selected-house", this.member);
+      // }
+      
+      
+    });
+  </script>
+</dom-module>
